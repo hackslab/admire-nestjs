@@ -35,15 +35,16 @@ export class AppService {
   ) {}
 
   async web(isVisit: boolean = false) {
-    if (isVisit) {
+    const activeWeb = await this.webService.getActiveWeb();
+    if (isVisit && activeWeb) {
       // Update the visits counter but don't block the response if something goes wrong
       try {
-        await this.webService.increaseVisits(1);
+        await this.webService.increaseVisits(activeWeb.id);
       } catch (error) {
         console.error("Failed to update visits counter", error);
       }
     }
-    return this.webService.getActiveWeb();
+    return activeWeb;
   }
 
   async init() {
